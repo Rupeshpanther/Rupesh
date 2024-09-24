@@ -3,106 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple To-Do List</title>
+    <title>Todo List</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
         }
         h1 {
             text-align: center;
+            color: #333;
         }
-        #todoApp {
-            max-width: 400px;
-            margin: 0 auto;
+        #todoForm {
+            max-width: 600px;
+            margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         input[type="text"] {
-            width: calc(100% - 42px);
+            width: calc(100% - 80px);
             padding: 10px;
+            margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
         button {
-            padding: 10px;
-            margin-left: 5px;
-            border: none;
-            background: #28a745;
+            padding: 10px 15px;
+            background-color: #28a745;
             color: white;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
-            background: #218838;
+            background-color: #218838;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            padding: 10px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            margin-top: 5px;
+        .todo-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .remove {
-            background: #dc3545;
-            border: none;
-            color: white;
-            padding: 5px 10px;
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            cursor: pointer;
         }
-        .remove:hover {
-            background: #c82333;
+        .delete-btn {
+            background-color: #dc3545;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
 <body>
 
-<div id="todoApp">
-    <h1>To-Do List</h1>
-    <input type="text" id="taskInput" placeholder="Add a new task...">
-    <button id="addButton">Add Task</button>
-    <ul id="taskList"></ul>
+<h1>Todo List</h1>
+
+<div id="todoForm">
+    <input type="text" id="todoInput" placeholder="Add a new task" required>
+    <button onclick="addTodo()">Add</button>
 </div>
 
+<div id="todoList"></div>
+
 <script>
-    document.getElementById('addButton').addEventListener('click', function() {
-        const taskInput = document.getElementById('taskInput');
-        const taskText = taskInput.value.trim();
-        
-        if (taskText) {
-            const li = document.createElement('li');
-            li.textContent = taskText;
+    function loadTodos() {
+        const todos = JSON.parse(localStorage.getItem('todos')) || [];
+        const todoList = document.getElementById('todoList');
+        todoList.innerHTML = '';
+        todos.forEach((todo, index) => {
+            const todoDiv = document.createElement('div');
+            todoDiv.className = 'todo-item';
+            todoDiv.innerHTML = `
+                <span>${todo}</span>
+                <button class="delete-btn" onclick="deleteTodo(${index})">Delete</button>
+            `;
+            todoList.appendChild(todoDiv);
+        });
+    }
 
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.className = 'remove';
-            removeButton.onclick = function() {
-                li.remove();
-            };
+    function addTodo() {
+        const todoInput = document.getElementById('todoInput');
+        const todoText = todoInput.value.trim();
+        if (!todoText) return;
 
-            li.appendChild(removeButton);
-            document.getElementById('taskList').appendChild(li);
-            taskInput.value = '';
-        }
-    });
+        const todos = JSON.parse(localStorage.getItem('todos')) || [];
+        todos.push(todoText);
+        localStorage.setItem('todos', JSON.stringify(todos));
+        todoInput.value = ''; // Clear the input
+        loadTodos(); // Refresh the displayed list
+    }
 
-    document.getElementById('taskInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            document.getElementById('addButton').click();
-        }
-    });
+    function deleteTodo(index) {
+        const todos = JSON.parse(localStorage.getItem('todos'));
+        todos.splice(index, 1); // Remove the task
+        localStorage.setItem('todos', JSON.stringify(todos));
+        loadTodos(); // Refresh the displayed list
+    }
+
+    // Load todos on initial page load
+    window.onload = loadTodos;
 </script>
-
 </body>
 </html>
