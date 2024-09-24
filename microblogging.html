@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post App</title>
+    <title>InstaClone</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #fafafa;
             color: #333;
         }
         h1 {
             text-align: center;
-            color: #333;
+            color: #405de6;
         }
-        #postForm {
+        #loginForm, #postForm, #feed {
             max-width: 600px;
             margin: auto;
             background: white;
@@ -25,106 +25,214 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        input[type="text"] {
-            width: calc(100% - 80px);
+        textarea {
+            width: 100%;
+            height: 100px;
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
         button {
             padding: 10px 15px;
-            background-color: #28a745;
+            background-color: #405de6;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #218838;
+            background-color: #00376b;
         }
-        .post-item {
-            display: flex;
-            flex-direction: column;
-            margin: 10px 0;
-            padding: 10px;
-            background: #fff;
+        .post {
+            margin-bottom: 20px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            padding: 10px;
         }
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .post-header img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-        .delete-btn {
-            background-color: #dc3545;
+        .post img, .post video {
+            max-width: 100%;
+            border-radius: 4px;
             margin-top: 10px;
         }
-        .delete-btn:hover {
-            background-color: #c82333;
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .comments {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .emoji {
+            cursor: pointer;
+            font-size: 20px;
+            margin: 0 5px;
+        }
+        .comment-input {
+            display: flex;
+            margin-top: 10px;
+        }
+        .comment-input input {
+            flex: 1;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .comment {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
 
-<h1>Post App</h1>
+<h1>InstaClone</h1>
 
-<div id="postForm">
-    <input type="text" id="username" placeholder="Enter your username" required>
-    <input type="text" id="postContent" placeholder="What's on your mind?" required>
+<div id="loginForm">
+    <input type="text" id="username" placeholder="Enter username" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="postForm" style="display:none;">
+    <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+    <input type="file" id="postMedia" accept="image/*,video/*">
     <button onclick="addPost()">Post</button>
 </div>
 
-<div id="postList"></div>
+<div id="feed"></div>
 
 <script>
-    function loadPosts() {
-        const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        const postList = document.getElementById('postList');
-        postList.innerHTML = '';
-        posts.forEach((post, index) => {
-            const postDiv = document.createElement('div');
-            postDiv.className = 'post-item';
-            postDiv.innerHTML = `
-                <div class="post-header">
-                    <img src="https://via.placeholder.com/40" alt="Profile Picture">
-                    <strong>${post.username}</strong>
-                </div>
-                <p>${post.content}</p>
-                <button class="delete-btn" onclick="deletePost(${index})">Delete</button>
-            `;
-            postList.appendChild(postDiv);
-        });
+    let currentUser = null;
+
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username.trim() === '' || password.trim() === '') {
+            alert('Please enter both username and password.');
+            return;
+        }
+
+        currentUser = username;
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('postForm').style.display = 'block';
+        loadPosts();
     }
 
     function addPost() {
-        const usernameInput = document.getElementById('username');
-        const postContentInput = document.getElementById('postContent');
-        const username = usernameInput.value.trim();
-        const content = postContentInput.value.trim();
+        const content = document.getElementById('postContent').value;
+        const mediaInput = document.getElementById('postMedia');
+        const mediaFile = mediaInput.files[0];
 
-        if (!username || !content) return;
+        if (content.trim() === '' && !mediaFile) {
+            alert('Please write something or upload an image/video before posting.');
+            return;
+        }
+
+        const post = {
+            id: Date.now(),
+            username: currentUser,
+            content: content,
+            media: mediaFile ? URL.createObjectURL(mediaFile) : null,
+            likes: 0,
+            dislikes: 0,
+            comments: []
+        };
 
         const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        posts.push({ username, content });
+        posts.push(post);
         localStorage.setItem('posts', JSON.stringify(posts));
-        usernameInput.value = ''; // Clear the username input
-        postContentInput.value = ''; // Clear the post input
-        loadPosts(); // Refresh the displayed list
+        document.getElementById('postContent').value = ''; // Clear the textarea
+        mediaInput.value = ''; // Clear the file input
+        renderPosts(posts);
     }
 
-    function deletePost(index) {
+    function loadPosts() {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        renderPosts(posts);
+    }
+
+    function renderPosts(posts) {
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';
+        posts.forEach(post => {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            postDiv.innerHTML = `
+                <strong>${post.username}</strong>
+                <p>${post.content}</p>
+                ${post.media ? (post.media.endsWith('.mp4') ? `<video controls src="${post.media}"></video>` : `<img src="${post.media}">`) : ''}
+                <div class="post-actions">
+                    <button onclick="likePost(${post.id})">👍 (${post.likes})</button>
+                    <button onclick="dislikePost(${post.id})">👎 (${post.dislikes})</button>
+                    <button onclick="deletePost(${post.id})">Delete</button>
+                </div>
+                <div class="comments">${renderComments(post.comments)}</div>
+                <div class="comment-input">
+                    <input type="text" placeholder="Add a comment" id="commentInput${post.id}">
+                    <button onclick="addComment(${post.id}, document.getElementById('commentInput${post.id}').value)">Post</button>
+                </div>
+                <div>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😊')">😊</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '❤️')">❤️</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😂')">😂</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😢')">😢</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😎')">😎</span>
+                </div>
+            `;
+            feed.appendChild(postDiv);
+        });
+    }
+
+    function renderComments(comments) {
+        return comments.map(comment => `<div class="comment">${comment}</div>`).join('');
+    }
+
+    function likePost(id) {
         const posts = JSON.parse(localStorage.getItem('posts'));
-        posts.splice(index, 1); // Remove the post
+        const post = posts.find(p => p.id === id);
+        post.likes++;
         localStorage.setItem('posts', JSON.stringify(posts));
-        loadPosts(); // Refresh the displayed list
+        loadPosts();
+    }
+
+    function dislikePost(id) {
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        const post = posts.find(p => p.id === id);
+        post.dislikes++;
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts();
+    }
+
+    function deletePost(id) {
+        if (confirm("Are you sure you want to delete this post?")) {
+            let posts = JSON.parse(localStorage.getItem('posts'));
+            posts = posts.filter(p => p.id !== id);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
+        }
+    }
+
+    function addComment(postId, comment) {
+        if (!comment) return;
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        const post = posts.find(p => p.id === postId);
+        post.comments.push(comment);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts();
+    }
+
+    function addEmoji(postId, emoji) {
+        const commentInput = document.getElementById(`commentInput${postId}`);
+        commentInput.value += emoji; // Append emoji to the comment input
     }
 
     // Load posts on initial page load
