@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microblogging App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #postForm {
+            margin-bottom: 20px;
+        }
+        #postInput {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #posts {
+            margin-top: 20px;
+        }
+        .post {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .like { background-color: #4CAF50; color: white; }
+        .dislike { background-color: #f44336; color: white; }
+        .command { background-color: #2196F3; color: white; }
+        .delete { background-color: #FF9800; color: white; }
+        .commandInput {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
+        .commandsList {
+            margin-top: 5px;
+            color: #555;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Microblogging Application</h1>
+<div id="postForm">
+    <input type="text" id="postInput" placeholder="What's on your mind?" />
+    <button onclick="addPost()">Post</button>
+</div>
+
+<div id="posts"></div>
+
+<script>
+    let posts = JSON.parse(localStorage.getItem('posts')) || []; // Load posts from localStorage
+
+    function addPost() {
+        const postInput = document.getElementById('postInput');
+        const postText = postInput.value.trim();
+        
+        if (postText) {
+            const newPost = {
+                text: postText,
+                likes: 0,
+                dislikes: 0,
+                commands: []
+            };
+            posts.push(newPost); // Add new post to the array
+            savePosts(); // Save to localStorage
+            renderPosts(); // Render posts
+            postInput.value = ''; // Clear input
+        }
+    }
+
+    function renderPosts() {
+        const postsContainer = document.getElementById('posts');
+        postsContainer.innerHTML = ''; // Clear current posts
+
+        posts.forEach((post, index) => {
+            const postContainer = document.createElement('div');
+            postContainer.className = 'post';
+            postContainer.innerHTML = `
+                <p>${post.text}</p>
+                <button class="button like" onclick="likePost(${index})">Like</button>
+                <button class="button dislike" onclick="dislikePost(${index})">Dislike</button>
+                <button class="button command" onclick="toggleCommandInput(${index})">Command</button>
+                <button class="button delete" onclick="deletePost(${index})">Delete</button>
+                <span class="likesCount">${post.likes} Likes</span>
+                <span class="dislikesCount">${post.dislikes} Dislikes</span>
+                <div class="commandInput" id="commandInput${index}">
+                    <input type="text" placeholder="Enter command..." />
+                    <button onclick="submitCommand(${index})">Submit</button>
+                </div>
+                <div class="commandsList">
+                    ${post.commands.map(command => <div>${command}</div>).join('')}
+                </div>
+            `;
+            postsContainer.appendChild(postContainer);
+        });
+    }
+
+    function savePosts() {
+        localStorage.setItem('posts', JSON.stringify(posts)); // Save posts to localStorage
+    }
+
+    function likePost(index) {
+        posts[index].likes++; // Increment likes
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    function dislikePost(index) {
+        posts[index].dislikes++; // Increment dislikes
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    function toggleCommandInput(index) {
+        const commandInput = document.getElementById(commandInput${index});
+        commandInput.style.display = commandInput.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function submitCommand(index) {
+        const commandInput = document.querySelector(#commandInput${index} input);
+        const commandText = commandInput.value.trim();
+        if (commandText) {
+            posts[index].commands.push(commandText); // Save command
+            commandInput.value = ''; // Clear input
+            toggleCommandInput(index); // Hide input after submission
+            savePosts(); // Save to localStorage
+            renderPosts(); // Re-render posts
+        }
+    }
+
+    function deletePost(index) {
+        posts.splice(index, 1); // Remove post from the array
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    // Initial render on page load
+    renderPosts();
+</script>
+
+</body>
+</html>
