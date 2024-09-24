@@ -3,155 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microblogging App</title>
+    <title>InstaClone</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #fafafa;
+            color: #333;
         }
-        #postForm {
+        h1 {
+            text-align: center;
+            color: #405de6;
+        }
+        #loginForm, #postForm, #feed {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        #postInput {
-            width: 80%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #posts {
-            margin-top: 20px;
-        }
-        .post {
-            background: #fff;
+        textarea {
+            width: 100%;
+            height: 100px;
             padding: 10px;
             margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
-        .button {
-            padding: 5px 10px;
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #405de6;
+            color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
-            margin-right: 5px;
         }
-        .like { background-color: #4CAF50; color: white; }
-        .dislike { background-color: #f44336; color: white; }
-        .command { background-color: #2196F3; color: white; }
-        .delete { background-color: #FF9800; color: white; }
-        .commandInput {
-            display: none; /* Initially hidden */
+        button:hover {
+            background-color: #00376b;
+        }
+        .post {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        .post img, .post video {
+            max-width: 100%;
+            border-radius: 4px;
             margin-top: 10px;
         }
-        .commandsList {
-            margin-top: 5px;
-            color: #555;
-            font-style: italic;
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .comments {
+            margin-top: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+        .emoji {
+            cursor: pointer;
+            font-size: 20px;
+            margin: 0 5px;
+        }
+        .comment-input {
+            display: flex;
+            margin-top: 10px;
+        }
+        .comment-input input {
+            flex: 1;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .comment {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
 
-<h1>Microblogging Application</h1>
-<div id="postForm">
-    <input type="text" id="postInput" placeholder="What's on your mind?" />
+<h1>InstaClone</h1>
+
+<div id="loginForm">
+    <input type="text" id="username" placeholder="Enter username" required>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <button onclick="login()">Login</button>
+</div>
+
+<div id="postForm" style="display:none;">
+    <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+    <input type="file" id="postMedia" accept="image/*,video/*">
     <button onclick="addPost()">Post</button>
 </div>
 
-<div id="posts"></div>
+<div id="feed"></div>
 
 <script>
-    let posts = JSON.parse(localStorage.getItem('posts')) || []; // Load posts from localStorage
+    let currentUser = null;
 
-    function addPost() {
-        const postInput = document.getElementById('postInput');
-        const postText = postInput.value.trim();
-        
-        if (postText) {
-            const newPost = {
-                text: postText,
-                likes: 0,
-                dislikes: 0,
-                commands: []
-            };
-            posts.push(newPost); // Add new post to the array
-            savePosts(); // Save to localStorage
-            renderPosts(); // Render posts
-            postInput.value = ''; // Clear input
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username.trim() === '' || password.trim() === '') {
+            alert('Please enter both username and password.');
+            return;
         }
+
+        currentUser = username;
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('postForm').style.display = 'block';
+        loadPosts();
     }
 
-    function renderPosts() {
-        const postsContainer = document.getElementById('posts');
-        postsContainer.innerHTML = ''; // Clear current posts
+    function addPost() {
+        const content = document.getElementById('postContent').value;
+        const mediaInput = document.getElementById('postMedia');
+        const mediaFile = mediaInput.files[0];
 
-        posts.forEach((post, index) => {
-            const postContainer = document.createElement('div');
-            postContainer.className = 'post';
-            postContainer.innerHTML = `
-                <p>${post.text}</p>
-                <button class="button like" onclick="likePost(${index})">Like</button>
-                <button class="button dislike" onclick="dislikePost(${index})">Dislike</button>
-                <button class="button command" onclick="toggleCommandInput(${index})">Command</button>
-                <button class="button delete" onclick="deletePost(${index})">Delete</button>
-                <span class="likesCount">${post.likes} Likes</span>
-                <span class="dislikesCount">${post.dislikes} Dislikes</span>
-                <div class="commandInput" id="commandInput${index}">
-                    <input type="text" placeholder="Enter command..." />
-                    <button onclick="submitCommand(${index})">Submit</button>
+        if (content.trim() === '' && !mediaFile) {
+            alert('Please write something or upload an image/video before posting.');
+            return;
+        }
+
+        const post = {
+            id: Date.now(),
+            username: currentUser,
+            content: content,
+            media: mediaFile ? URL.createObjectURL(mediaFile) : null,
+            likes: 0,
+            dislikes: 0,
+            comments: []
+        };
+
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        posts.push(post);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        document.getElementById('postContent').value = ''; // Clear the textarea
+        mediaInput.value = ''; // Clear the file input
+        renderPosts(posts);
+    }
+
+    function loadPosts() {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        renderPosts(posts);
+    }
+
+    function renderPosts(posts) {
+        const feed = document.getElementById('feed');
+        feed.innerHTML = '';
+        posts.forEach(post => {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            postDiv.innerHTML = `
+                <strong>${post.username}</strong>
+                <p>${post.content}</p>
+                ${post.media ? (post.media.endsWith('.mp4') ? `<video controls src="${post.media}"></video>` : `<img src="${post.media}">`) : ''}
+                <div class="post-actions">
+                    <button onclick="likePost(${post.id})">👍 (${post.likes})</button>
+                    <button onclick="dislikePost(${post.id})">👎 (${post.dislikes})</button>
+                    <button onclick="deletePost(${post.id})">Delete</button>
                 </div>
-                <div class="commandsList">
-                    ${post.commands.map(command => <div>${command}</div>).join('')}
+                <div class="comments">${renderComments(post.comments)}</div>
+                <div class="comment-input">
+                    <input type="text" placeholder="Add a comment" id="commentInput${post.id}">
+                    <button onclick="addComment(${post.id}, document.getElementById('commentInput${post.id}').value)">Post</button>
+                </div>
+                <div>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😊')">😊</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '❤️')">❤️</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😂')">😂</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😢')">😢</span>
+                    <span class="emoji" onclick="addEmoji(${post.id}, '😎')">😎</span>
                 </div>
             `;
-            postsContainer.appendChild(postContainer);
+            feed.appendChild(postDiv);
         });
     }
 
-    function savePosts() {
-        localStorage.setItem('posts', JSON.stringify(posts)); // Save posts to localStorage
+    function renderComments(comments) {
+        return comments.map(comment => `<div class="comment">${comment}</div>`).join('');
     }
 
-    function likePost(index) {
-        posts[index].likes++; // Increment likes
-        savePosts(); // Save to localStorage
-        renderPosts(); // Re-render posts
+    function likePost(id) {
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        const post = posts.find(p => p.id === id);
+        post.likes++;
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts();
     }
 
-    function dislikePost(index) {
-        posts[index].dislikes++; // Increment dislikes
-        savePosts(); // Save to localStorage
-        renderPosts(); // Re-render posts
+    function dislikePost(id) {
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        const post = posts.find(p => p.id === id);
+        post.dislikes++;
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts();
     }
 
-    function toggleCommandInput(index) {
-        const commandInput = document.getElementById(commandInput${index});
-        commandInput.style.display = commandInput.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function submitCommand(index) {
-        const commandInput = document.querySelector(#commandInput${index} input);
-        const commandText = commandInput.value.trim();
-        if (commandText) {
-            posts[index].commands.push(commandText); // Save command
-            commandInput.value = ''; // Clear input
-            toggleCommandInput(index); // Hide input after submission
-            savePosts(); // Save to localStorage
-            renderPosts(); // Re-render posts
+    function deletePost(id) {
+        if (confirm("Are you sure you want to delete this post?")) {
+            let posts = JSON.parse(localStorage.getItem('posts'));
+            posts = posts.filter(p => p.id !== id);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
         }
     }
 
-    function deletePost(index) {
-        posts.splice(index, 1); // Remove post from the array
-        savePosts(); // Save to localStorage
-        renderPosts(); // Re-render posts
+    function addComment(postId, comment) {
+        if (!comment) return;
+        const posts = JSON.parse(localStorage.getItem('posts'));
+        const post = posts.find(p => p.id === postId);
+        post.comments.push(comment);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        loadPosts();
     }
 
-    // Initial render on page load
-    renderPosts();
-</script>
+    function addEmoji(postId, emoji) {
+        const commentInput = document.getElementById(`commentInput${postId}`);
+        commentInput.value += emoji; // Append emoji to the comment input
+    }
 
+    // Load posts on initial page load
+    window.onload = loadPosts;
+</script>
 </body>
 </html>
