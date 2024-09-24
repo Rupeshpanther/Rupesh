@@ -1,39 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="styles.css">
-<title>Microblogging App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY blogs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #loginForm, #postForm {
+            max-width: 400px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="password"], textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #feed {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .post {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .post:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
-  <center>
-<header>
+
 <h1>Microblogging App</h1>
-</header>
-<main>
-<div id="login-form">
-<h2>Login</h2>
-<input type="text" id="username" placeholder="Username">
-<button id="login-btn">Login</button>
+
+<div id="loginForm">
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button id="loginButton">Login</button>
 </div>
-<div id="user-dashboard">
-<div id="like-form">
-<input type="text" id="username" placeholder="Username">
-<button id="login-btn">Login</button>
+
+<div id="postForm" style="display: none;">
+    <textarea id="postInput" rows="4" placeholder="Write your post..."></textarea>
+    <button id="postButton">Post</button>
 </div>
-<div id="user-dashboard">
-<div id="like-form">  
-<h2>Welcome, <span id="user-username"></span>!</h2>
-<textarea id="post-content" placeholder="Write your post..."></textarea>
-<button id="post-btn">Post</button>
+
+<div id="feed" style="display: none;">
+    <h2>Feed</h2>
+    <div id="postFeed"></div>
 </div>
-<div id="feed">
-<h2>Feed</h2>
-<ul id="post-list"></ul>
-</div>
-</main>
-<script src="app.js"></script>
-</center>
+
+<script>
+    let isLoggedIn = false;
+
+    document.getElementById('loginButton').addEventListener('click', function() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Simple login validation (you can enhance this)
+        if (username && password) {
+            isLoggedIn = true;
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('postForm').style.display = 'block';
+            document.getElementById('feed').style.display = 'block';
+            document.getElementById('postFeed').innerHTML = ''; // Clear feed
+            alert('Login successful!');
+        } else {
+            alert('Please enter username and password.');
+        }
+    });
+
+    document.getElementById('postButton').addEventListener('click', function() {
+        const postInput = document.getElementById('postInput').value.trim();
+
+        if (postInput) {
+            const postDiv = document.createElement('div');
+            postDiv.className = 'post';
+            postDiv.textContent = postInput;
+
+            document.getElementById('postFeed').appendChild(postDiv);
+            document.getElementById('postInput').value = ''; // Clear input
+        } else {
+            alert('Please write a post before submitting.');
+        }
+    });
+</script>
+
 </body>
 </html>
