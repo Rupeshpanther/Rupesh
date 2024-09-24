@@ -3,114 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY blogs</title>
+    <title>Microblogging App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            background-color: #f4f4f4;
         }
-        h1 {
-            text-align: center;
+        #postForm {
+            margin-bottom: 20px;
         }
-        #loginForm, #postForm {
-            max-width: 400px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
+        #postInput {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        input[type="text"], input[type="password"], textarea {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        #feed {
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        #posts {
+            margin-top: 20px;
         }
         .post {
+            background: #fff;
             padding: 10px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .post:last-child {
-            border-bottom: none;
+        .button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .like { background-color: #4CAF50; color: white; }
+        .dislike { background-color: #f44336; color: white; }
+        .command { background-color: #2196F3; color: white; }
+        .delete { background-color: #FF9800; color: white; }
+        .commandInput {
+            display: none; /* Initially hidden */
+            margin-top: 10px;
+        }
+        .commandsList {
+            margin-top: 5px;
+            color: #555;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 
-<h1>Microblogging App</h1>
-
-<div id="loginForm">
-    <input type="text" id="username" placeholder="Username" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button id="loginButton">Login</button>
+<h1>Microblogging Application</h1>
+<div id="postForm">
+    <input type="text" id="postInput" placeholder="What's on your mind?" />
+    <button onclick="addPost()">Post</button>
 </div>
 
-<div id="postForm" style="display: none;">
-    <textarea id="postInput" rows="4" placeholder="Write your post..."></textarea>
-    <button id="postButton">Post</button>
-</div>
-
-<div id="feed" style="display: none;">
-    <h2>Feed</h2>
-    <div id="postFeed"></div>
-</div>
+<div id="posts"></div>
 
 <script>
-    let isLoggedIn = false;
+    let posts = JSON.parse(localStorage.getItem('posts')) || []; // Load posts from localStorage
 
-    document.getElementById('loginButton').addEventListener('click', function() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        // Simple login validation (you can enhance this)
-        if (username && password) {
-            isLoggedIn = true;
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('postForm').style.display = 'block';
-            document.getElementById('feed').style.display = 'block';
-            document.getElementById('postFeed').innerHTML = ''; // Clear feed
-            alert('Login successful!');
-        } else {
-            alert('Please enter username and password.');
+    function addPost() {
+        const postInput = document.getElementById('postInput');
+        const postText = postInput.value.trim();
+        
+        if (postText) {
+            const newPost = {
+                text: postText,
+                likes: 0,
+                dislikes: 0,
+                commands: []
+            };
+            posts.push(newPost); // Add new post to the array
+            savePosts(); // Save to localStorage
+            renderPosts(); // Render posts
+            postInput.value = ''; // Clear input
         }
-    });
+    }
 
-    document.getElementById('postButton').addEventListener('click', function() {
-        const postInput = document.getElementById('postInput').value.trim();
+    function renderPosts() {
+        const postsContainer = document.getElementById('posts');
+        postsContainer.innerHTML = ''; // Clear current posts
 
-        if (postInput) {
-            const postDiv = document.createElement('div');
-            postDiv.className = 'post';
-            postDiv.textContent = postInput;
+        posts.forEach((post, index) => {
+            const postContainer = document.createElement('div');
+            postContainer.className = 'post';
+            postContainer.innerHTML = `
+                <p>${post.text}</p>
+                <button class="button like" onclick="likePost(${index})">Like</button>
+                <button class="button dislike" onclick="dislikePost(${index})">Dislike</button>
+                <button class="button command" onclick="toggleCommandInput(${index})">Command</button>
+                <button class="button delete" onclick="deletePost(${index})">Delete</button>
+                <span class="likesCount">${post.likes} Likes</span>
+                <span class="dislikesCount">${post.dislikes} Dislikes</span>
+                <div class="commandInput" id="commandInput${index}">
+                    <input type="text" placeholder="Enter command..." />
+                    <button onclick="submitCommand(${index})">Submit</button>
+                </div>
+                <div class="commandsList">
+                    ${post.commands.map(command => <div>${command}</div>).join('')}
+                </div>
+            `;
+            postsContainer.appendChild(postContainer);
+        });
+    }
 
-            document.getElementById('postFeed').appendChild(postDiv);
-            document.getElementById('postInput').value = ''; // Clear input
-        } else {
-            alert('Please write a post before submitting.');
+    function savePosts() {
+        localStorage.setItem('posts', JSON.stringify(posts)); // Save posts to localStorage
+    }
+
+    function likePost(index) {
+        posts[index].likes++; // Increment likes
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    function dislikePost(index) {
+        posts[index].dislikes++; // Increment dislikes
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    function toggleCommandInput(index) {
+        const commandInput = document.getElementById(commandInput${index});
+        commandInput.style.display = commandInput.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function submitCommand(index) {
+        const commandInput = document.querySelector(#commandInput${index} input);
+        const commandText = commandInput.value.trim();
+        if (commandText) {
+            posts[index].commands.push(commandText); // Save command
+            commandInput.value = ''; // Clear input
+            toggleCommandInput(index); // Hide input after submission
+            savePosts(); // Save to localStorage
+            renderPosts(); // Re-render posts
         }
-    });
+    }
+
+    function deletePost(index) {
+        posts.splice(index, 1); // Remove post from the array
+        savePosts(); // Save to localStorage
+        renderPosts(); // Re-render posts
+    }
+
+    // Initial render on page load
+    renderPosts();
 </script>
 
 </body>
