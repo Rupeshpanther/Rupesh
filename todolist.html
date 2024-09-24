@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <style>
+        .container {
+            width: 360px;
+        }  
+        #inputField {
+            width: 300px;
+            height: 46px;
+            border-width: 0;
+            border: 1px solid rgb(235, 13, 13);
+            outline: none;
+            font-size: 25px;
+            vertical-align: middle;
+        }
+        #addToDo {
+            height: 50px;
+            width: 50px;
+            border: 1px solid rgb(222, 14, 14);
+            vertical-align: middle;
+            font-size: 30px;
+        }
+        .paragraph-styling {
+            margin: 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .to-dos {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+    <h1>To Do List</h1>
+    <div class="container">
+        <input id="inputField" type="text"><button id="addToDo">+</button>
+        <div class="to-dos" id="toDoContainer">
+        </div>
+    </div>
+    <script>
+        let addToDoButton = document.getElementById('addToDo');
+        let toDoContainer = document.getElementById('toDoContainer');
+        let inputField = document.getElementById('inputField');
+
+        addToDoButton.addEventListener('click', function(){
+            var paragraph = document.createElement('p');
+            paragraph.classList.add('paragraph-styling');
+            paragraph.innerText = inputField.value; 
+            toDoContainer.appendChild(paragraph);
+            inputField.value = "";
+            paragraph.addEventListener('click', function(){
+                paragraph.style.textDecoration = "line-through";
+            })
+            paragraph.addEventListener('dblclick', function(){
+                toDoContainer.removeChild(paragraph);
+            })
+        })
+    </script>
+</body>
+</html>
