@@ -3,240 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaClone</title>
+    <title>Kiddos Microblogging</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #fafafa;
-            color: #333;
+            background-color: #f0f8ff;
         }
-        h1 {
-            text-align: center;
-            color: #405de6;
-        }
-        #loginForm, #postForm, #feed {
-            max-width: 600px;
+        .container {
+            max-width: 800px;
             margin: auto;
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        textarea {
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="password"], input[type="file"], input[type="number"], textarea {
             width: 100%;
-            height: 100px;
             padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        input[type="file"] {
-            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         button {
-            padding: 10px 15px;
-            background-color: #405de6;
+            cursor: pointer;
+            background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
         }
         button:hover {
-            background-color: #00376b;
+            background-color: #0056b3;
         }
         .post {
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
             padding: 10px;
-        }
-        .post img, .post video {
-            max-width: 100%;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .comments {
-            margin-top: 10px;
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
-        }
-        .emoji {
-            cursor: pointer;
-            font-size: 20px;
-            margin: 0 5px;
-        }
-        .comment-input {
-            display: flex;
-            margin-top: 10px;
-        }
-        .comment-input input {
-            flex: 1;
-            padding: 5px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fdfdfd;
         }
         .comment {
-            margin: 5px 0;
-            padding: 5px;
-            border-radius: 4px;
-            background-color: #f0f0f0;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .icon {
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .emoji {
+            font-size: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<h1>InstaClone</h1>
+<div id="app" class="container">
+    <!-- Login/Signup Page -->
+    <div id="login-page">
+        <h1>Login / Sign Up</h1>
+        <div id="signup-form">
+            <div class="form-group">
+                <label for="signup-username">Username</label>
+                <input type="text" id="signup-username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label for="signup-age">Age</label>
+                <input type="number" id="signup-age" placeholder="Enter your age" min="1">
+            </div>
+            <button onclick="signup()">Sign Up</button>
+        </div>
 
-<div id="loginForm">
-    <input type="text" id="username" placeholder="Enter username" required>
-    <input type="password" id="password" placeholder="Enter password" required>
-    <button onclick="login()">Login</button>
+        <div id="login-form" style="display: none;">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="login-username">Username</label>
+                <input type="text" id="login-username" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password">
+            </div>
+            <button onclick="login()">Login</button>
+        </div>
+
+        <button onclick="toggleForms()">Already have an account? Login</button>
+    </div>
+
+    <!-- Welcome Page -->
+    <div id="welcome-page" style="display: none;">
+        <h1>Welcome to Kiddos!</h1>
+        <p>This is your favorite blogging website.</p>
+        <button onclick="showPostPage()">Go to Post Page</button>
+        <button onclick="showLoginPage()">Logout</button>
+    </div>
+
+    <!-- Post Page -->
+    <div id="post-page" style="display: none;">
+        <h2>Create a Post</h2>
+        <textarea id="post-description" placeholder="Write a description for your post..." rows="4"></textarea>
+        <input type="file" id="media" accept="image/*,video/*">
+        <button onclick="createPost()">Post</button>
+        <div id="posts"></div>
+        <button onclick="showWelcomePage()">Back to Welcome</button>
+    </div>
 </div>
-
-<div id="postForm" style="display:none;">
-    <textarea id="postContent" placeholder="What's on your mind?"></textarea>
-    <input type="file" id="postMedia" accept="image/*,video/*">
-    <button onclick="addPost()">Post</button>
-</div>
-
-<div id="feed"></div>
 
 <script>
     let currentUser = null;
 
-    function login() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        if (username.trim() === '' || password.trim() === '') {
-            alert('Please enter both username and password.');
-            return;
+    function loadUserState() {
+        const savedUser = localStorage.getItem('currentUser');
+        const savedPage = localStorage.getItem('currentPage');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            if (savedPage) {
+                if (savedPage === 'post') {
+                    showPostPage();
+                } else {
+                    showWelcomePage();
+                }
+            } else {
+                showLoginPage();
+            }
+        } else {
+            showLoginPage();
         }
-
-        currentUser = username;
-        document.getElementById('loginForm').style.display = 'none';
-        document.getElementById('postForm').style.display = 'block';
-        loadPosts();
     }
 
-    function addPost() {
-        const content = document.getElementById('postContent').value;
-        const mediaInput = document.getElementById('postMedia');
-        const mediaFile = mediaInput.files[0];
+    function toggleForms() {
+        const signupForm = document.getElementById('signup-form');
+        const loginForm = document.getElementById('login-form');
+        signupForm.style.display = signupForm.style.display === 'none' ? 'block' : 'none';
+        loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+    }
 
-        if (content.trim() === '' && !mediaFile) {
-            alert('Please write something or upload an image/video before posting.');
-            return;
+    function signup() {
+        const username = document.getElementById('signup-username').value;
+        const password = document.getElementById('signup-password').value;
+        const age = document.getElementById('signup-age').value;
+
+        if (username && password && age) {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(user => user.username === username)) {
+                alert('Username already exists. Please choose a different one.');
+                return;
+            }
+            const user = { username, password, age };
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Signup successful! Please login.');
+            toggleForms();
+        } else {
+            alert('Please fill all fields.');
         }
+    }
 
-        const post = {
-            id: Date.now(),
-            username: currentUser,
-            content: content,
-            media: mediaFile ? URL.createObjectURL(mediaFile) : null,
-            likes: 0,
-            dislikes: 0,
-            comments: []
+    function login() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+
+        const user = users.find(u => u.username === username && u.password === password);
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showWelcomePage();
+        } else {
+            alert('Invalid username or password.');
+        }
+    }
+
+    function showWelcomePage() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('post-page').style.display = 'none';
+        document.getElementById('welcome-page').style.display = 'block';
+        localStorage.setItem('currentPage', 'welcome');
+    }
+
+    function showLoginPage() {
+        currentUser = null;
+        localStorage.removeItem('currentUser');
+        document.getElementById('welcome-page').style.display = 'none';
+        document.getElementById('post-page').style.display = 'none';
+        document.getElementById('login-page').style.display = 'block';
+        toggleForms(); // Reset to signup form for user convenience
+        localStorage.setItem('currentPage', 'login');
+    }
+
+    function showPostPage() {
+        document.getElementById('welcome-page').style.display = 'none';
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('post-page').style.display = 'block';
+        loadPosts();
+        localStorage.setItem('currentPage', 'post');
+    }
+
+    function createPost() {
+        const mediaInput = document.getElementById('media');
+        const descriptionInput = document.getElementById('post-description');
+        const reader = new FileReader();
+
+        reader.onload = function() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const newPost = {
+                id: Date.now().toString(),
+                user: currentUser.username,
+                media: reader.result,
+                description: descriptionInput.value,
+                comments: [],
+                likes: 0,
+            };
+            posts.push(newPost);
+            localStorage.setItem('posts', JSON.stringify(posts));
+            descriptionInput.value = ''; // Clear the description input
+            mediaInput.value = ''; // Clear the file input
+            loadPosts();
         };
 
-        const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        posts.push(post);
-        localStorage.setItem('posts', JSON.stringify(posts));
-        document.getElementById('postContent').value = ''; // Clear the textarea
-        mediaInput.value = ''; // Clear the file input
-        renderPosts(posts);
+        if (mediaInput.files[0]) {
+            reader.readAsDataURL(mediaInput.files[0]);
+        } else {
+            alert('Please upload an image or video.');
+        }
     }
 
     function loadPosts() {
+        const postsContainer = document.getElementById('posts');
+        postsContainer.innerHTML = '';
         const posts = JSON.parse(localStorage.getItem('posts')) || [];
-        renderPosts(posts);
-    }
-
-    function renderPosts(posts) {
-        const feed = document.getElementById('feed');
-        feed.innerHTML = '';
+        
         posts.forEach(post => {
-            const postDiv = document.createElement('div');
-            postDiv.className = 'post';
-            postDiv.innerHTML = `
-                <strong>${post.username}</strong>
-                <p>${post.content}</p>
-                ${post.media ? (post.media.endsWith('.mp4') ? `<video controls src="${post.media}"></video>` : `<img src="${post.media}">`) : ''}
-                <div class="post-actions">
-                    <button onclick="likePost(${post.id})">👍 (${post.likes})</button>
-                    <button onclick="dislikePost(${post.id})">👎 (${post.dislikes})</button>
-                    <button onclick="deletePost(${post.id})">Delete</button>
-                </div>
-                <div class="comments">${renderComments(post.comments)}</div>
-                <div class="comment-input">
-                    <input type="text" placeholder="Add a comment" id="commentInput${post.id}">
-                    <button onclick="addComment(${post.id}, document.getElementById('commentInput${post.id}').value)">Post</button>
-                </div>
-                <div>
-                    <span class="emoji" onclick="addEmoji(${post.id}, '😊')">😊</span>
-                    <span class="emoji" onclick="addEmoji(${post.id}, '❤️')">❤️</span>
-                    <span class="emoji" onclick="addEmoji(${post.id}, '😂')">😂</span>
-                    <span class="emoji" onclick="addEmoji(${post.id}, '😢')">😢</span>
-                    <span class="emoji" onclick="addEmoji(${post.id}, '😎')">😎</span>
-                </div>
+            const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.innerHTML = `
+                <p><strong>${post.user}</strong></p>
+                <p>${post.description}</p>
+                ${post.media ? `<img src="${post.media}" style="max-width: 100%;" />` : ''}
+                <p>${post.likes} <span class="icon" onclick="likePost('${post.id}')">❤️</span>
+                <span class="emoji" onclick="reactToPost('${post.id}', '😄')">😄</span>
+                <span class="emoji" onclick="reactToPost('${post.id}', '👍')">👍</span>
+                <span class="emoji" onclick="reactToPost('${post.id}', '🎉')">🎉</span>
+                | Comments: ${post.comments.length}</p>
+                <textarea id="comment-input-${post.id}" placeholder="Write a comment..." rows="2"></textarea>
+                <button onclick="addComment('${post.id}')">💬 Comment</button>
+                <button onclick="deletePost('${post.id}')">🗑️ Delete</button>
+                <div id="comments-${post.id}">${post.comments.map(comment => `<div class="comment"><strong>${comment.user}:</strong> ${comment.text}</div>`).join('')}</div>
             `;
-            feed.appendChild(postDiv);
+            postsContainer.appendChild(postElement);
         });
     }
 
-    function renderComments(comments) {
-        return comments.map(comment => `<div class="comment">${comment}</div>`).join('');
+    function addComment(postId) {
+        const commentInput = document.getElementById(`comment-input-${postId}`);
+        const commentText = commentInput.value.trim();
+        
+        if (commentText) {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.push({ user: currentUser.username, text: commentText });
+                localStorage.setItem('posts', JSON.stringify(posts));
+                commentInput.value = ''; // Clear the comment input
+                loadPosts();
+            }
+        } else {
+            alert('Please enter a comment.');
+        }
     }
 
-    function likePost(id) {
-        const posts = JSON.parse(localStorage.getItem('posts'));
-        const post = posts.find(p => p.id === id);
-        post.likes++;
-        localStorage.setItem('posts', JSON.stringify(posts));
-        loadPosts();
-    }
-
-    function dislikePost(id) {
-        const posts = JSON.parse(localStorage.getItem('posts'));
-        const post = posts.find(p => p.id === id);
-        post.dislikes++;
-        localStorage.setItem('posts', JSON.stringify(posts));
-        loadPosts();
-    }
-
-    function deletePost(id) {
-        if (confirm("Are you sure you want to delete this post?")) {
-            let posts = JSON.parse(localStorage.getItem('posts'));
-            posts = posts.filter(p => p.id !== id);
+    function likePost(postId) {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        const post = posts.find(p => p.id === postId);
+        if (post) {
+            post.likes++;
             localStorage.setItem('posts', JSON.stringify(posts));
             loadPosts();
         }
     }
 
-    function addComment(postId, comment) {
-        if (!comment) return;
-        const posts = JSON.parse(localStorage.getItem('posts'));
+    function reactToPost(postId, emoji) {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
         const post = posts.find(p => p.id === postId);
-        post.comments.push(comment);
-        localStorage.setItem('posts', JSON.stringify(posts));
+        if (post) {
+            post.comments.push({ user: currentUser.username, text: emoji });
+            localStorage.setItem('posts', JSON.stringify(posts));
+            loadPosts();
+        }
+    }
+
+    function deletePost(postId) {
+        const posts = JSON.parse(localStorage.getItem('posts')) || [];
+        const updatedPosts = posts.filter(p => p.id !== postId);
+        localStorage.setItem('posts', JSON.stringify(updatedPosts));
         loadPosts();
     }
 
-    function addEmoji(postId, emoji) {
-        const commentInput = document.getElementById(`commentInput${postId}`);
-        commentInput.value += emoji; // Append emoji to the comment input
-    }
-
-    // Load posts on initial page load
-    window.onload = loadPosts;
+    // Load user state on page load
+    window.onload = loadUserState;
 </script>
 </body>
 </html>
