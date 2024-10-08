@@ -1,58 +1,166 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>RUPESH WEB DEVOLOPER</title>
-        <link href="styles.css" rel="stylesheet">
-        
-
-    </head>
-    <body>
-        <section id="home">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupesh Web Developer</title>
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #ffc107;
+        }
+        .about, .proj, .contact {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .profile img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            border: 5px solid white;
+            transition: transform 0.3s;
+        }
+        .profile img:hover {
+            transform: scale(1.1);
+        }
+        h1, h2, h3, h4, h5 {
+            color: #333;
+        }
+        h3 {
+            margin: 10px 0;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .social-media {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .social-media a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+        .social-media a:hover {
+            color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #007bff;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RUPESH WEB DEVELOPER</h1>
         <nav>
-            <ul><li><a href="#home">HOME</a></li></ul>
-            <ul><li><a href="#about">ABOUT</a></li></ul>
-            <ul><li><a href="#myprojects">MY PROJECTS</a></li></ul>
-            <ul><li><a href="#contact">CONTACT</a></li></ul>
-            <ul><li><a href="#skills">SKILLS</a></li></ul>
+            <ul>
+                <li><a href="#home">HOME</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#myprojects">MY PROJECTS</a></li>
+                <li><a href="#skills">SKILLS</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+            </ul>
         </nav>
-        <br>
-        <div class="about">
-        <section id="about">
-            <h1>ABOUT</h1>
-            <img src="p.png" alt="PERSONPNG" height="100px" width="100px" style="align-items: center;">
-  <h1>RUPESH S</h1>      <h4> I AM A FULL STACK WEB DEVOLOPER</h4>
-        <p style="color:blue;">Here are some of my overview:</p>
-        <ul>
-        <li><h3>GRADUATED AT <Italic>Anna University BIT campus,Trichy</Italic></h3></li>
-        <section><strong>HOBBIES:</strong>
-            <li><h4>PLAYING BASKETBALL</h4></li>
-            <li><H4>WATCHING MOVIES</H4></li>
-            <li><H4>Solving Leet code Problems</H4></li>
+    </header>
+
+    <section id="about" class="about">
+        <h2>ABOUT</h2>
+        <div class="profile">
+            <img src="https://via.placeholder.com/150" alt="Profile Picture">
+            <h3>RUPESH S</h3>
+            <h4>I AM A FULL STACK WEB DEVELOPER</h4>
+            <p style="color:blue;">Here are some of my overview:</p>
+            <ul>
+                <li><strong>GRADUATED AT:</strong> <em>Anna University BIT Campus, Trichy</em></li>
+                <li><strong>HOBBIES:</strong></li>
+                <ul>
+                    <li>Playing Basketball</li>
+                    <li>Watching Movies</li>
+                    <li>Solving LeetCode Problems</li>
+                </ul>
+            </ul>
+        </div>
     </section>
-</Section>
-</div>
-<div class="proj">
-    <section id="myprojects">
-        <h1>MY PROJECTS</h1>
+
+    <section id="myprojects" class="proj">
+        <h2>MY PROJECTS</h2>
         <p>I INVOLVED IN VARIOUS PROJECTS :</p>
         <ol>
-            <li><a href="#f-zone">F-Zone app devolpment</a></li>
-            <li><a href="#ec">e-commerce</a></li>
+            <li><a href="#f-zone">F-Zone App Development</a></li>
+            <li><a href="#ec">E-Commerce</a></li>
         </ol>
         <section id="f-zone">
-            <h1>I GIVE SOME OVERVIEW OF THIS PROJECT</h1>
-            <P><italic>F-ZONE-</italic>is a food based application devoloped to protect wastage of food and give some awareness for to people about the importance of Food </P>
-            <h5>i posted my projects in my github link </h5>
-            <a href="#githuB" class ="btn">GITHUB</a>
+            <h3>F-Zone</h3>
+            <p><em>F-ZONE</em> is a food-based application developed to reduce food wastage and raise awareness about the importance of food.</p>
+            <h5>View my project on GitHub</h5>
+            <a href="#githuB" class="btn">GITHUB</a>
         </section>
         <section id="ec">
-            <h1>I GIVE SOME OVERVIEW OF THIS PROJECT</h1>
-            <P><italic>E-Commerce-</italic>is a marketing based application which helps people to buy things through online </P>
-            <h5>i posted my projects in my github link </h5>
-            <a href="#ec" class ="btn">E-commerce</a>
+            <h3>E-Commerce</h3>
+            <p><em>E-Commerce</em> is a marketing-based application that helps people buy things online.</p>
+            <h5>View my project on GitHub</h5>
+            <a href="#githuB" class="btn">GITHUB</a>
         </section>
     </section>
-    </div>
+
     <section id="skills" style="text-align: center; background-color: azure;">
         <h2>Skills</h2>
         <ul>
@@ -63,22 +171,21 @@
         </ul>
     </section>
 
-    <div class="contact">
-    <section id="contact">
+    <section id="contact" class="contact">
         <h2>Contact Me</h2>
         <form>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
 
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required> <br>
+            <input type="email" id="email" name="email" required>
 
             <label for="subject">Subject:</label>
             <input type="text" id="subject" name="subject">
-<br>
+
             <label for="message">Message:</label>
             <textarea id="message" name="message" required></textarea>
-<br>
+
             <button type="submit" class="btn">Send</button>
         </form>
         <p>Connect with me:</p>
@@ -88,14 +195,9 @@
             <li><a href="#">Twitter</a></li>
         </ul>
     </section>
-    </div>
-</section>
 
     <footer>
-        <P> @rupeshcrtr .ALL RIGHTS RESERVED</P>
+        <p>&copy; Rupesh S. All Rights Reserved</p>
     </footer>
-
-        
-        
-    </body>
+</body>
 </html>
