@@ -1,18 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .project-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .project-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 220px;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .project-card a {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .project-card a:hover {
+            background-color: #0056b3;
+        }
+        h2, h3, h4 {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Full stack web development Lab</h1>
-  <h2>My Portfolio</h2>
-  <a href ="data.html">MY PORTFOLIO</a><br>
-  <h3>TO Do List</h3>
-  <a href ="todolist.html">To do list</a>
-  <h4> Mico Blog</h4>
-  <a href="microblogging.html">This Is My Microblog</a>
-  <h4>Food</h4>
-  <a href="food.html">Food</a>
+<h1>Full Stack Web Development Lab</h1>
+
+<div class="project-container">
+    <div class="project-card">
+        <h2>My Portfolio</h2>
+        <a href="data.html">View My Portfolio</a>
+    </div>
+    <div class="project-card">
+        <h3>To Do List</h3>
+        <a href="todolist.html">Manage Your Tasks</a>
+    </div>
+    <div class="project-card">
+        <h4>Micro Blog</h4>
+        <a href="microblogging.html">This Is My Microblog</a>
+    </div>
+    <div class="project-card">
+        <h4>Food</h4>
+        <a href="food.html">Explore Food</a>
+    </div>
+</div>
+
 </body>
 </html>
