@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Buy & Sell</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background: #007bff;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group, .login-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"], input[type="file"], input[type="submit"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background: #218838;
+        }
+
+        .product-list {
+            margin-top: 20px;
+        }
+
+        .product-item {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .product-item h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .product-item p {
+            margin: 5px 0;
+        }
+
+        .product-image {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .login-group, .logout-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            margin: 20px 0;
+        }
+
+        .filter-group input[type="text"] {
+            width: auto;
+            display: inline-block;
+        }
+
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Cart</h1>
+    </header>
+    <div class="container">
+        <div class="login-group" id="login-section">
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+                <input type="submit" id="login-btn" value="Login">
+            </div>
+            <div>
+                <button id="logout-btn" class="hidden">Logout</button>
+            </div>
+        </div>
+
+        <div class="form-group" id="product-form" style="display: none;">
+            <h2>Add Product</h2>
+            <label for="product-name">Product Name</label>
+            <input type="text" id="product-name" placeholder="Enter product name" required>
+
+            <label for="product-price">Price ($)</label>
+            <input type="number" id="product-price" placeholder="Enter product price" required>
+
+            <label for="product-description">Description</label>
+            <input type="text" id="product-description" placeholder="Enter product description" required>
+
+            <label for="product-image">Upload Image</label>
+            <input type="file" id="product-image" accept="image/*">
+
+            <label for="product-video">Upload Video</label>
+            <input type="file" id="product-video" accept="video/*">
+
+            <input type="submit" id="add-product" value="Add Product">
+        </div>
+
+        <div class="filter-group">
+            <label for="filter">Filter Products</label>
+            <input type="text" id="filter" placeholder="Search products...">
+        </div>
+
+        <div class="product-list" id="product-list"></div>
+    </div>
+
+    <script>
+        const products = [];
+        let currentUser = null;
+
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple login simulation (you can enhance this with real authentication)
+            if (username && password) {
+                currentUser = username;
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('product-form').style.display = 'block';
+                document.getElementById('logout-btn').classList.remove('hidden');
+                alert('Logged in as ' + username);
+            } else {
+                alert('Please enter valid credentials');
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            currentUser = null;
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('product-form').style.display = 'none';
+            document.getElementById('logout-btn').classList.add('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            alert('Logged out');
+        });
+
+        document.getElementById('add-product').addEventListener('click', function() {
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const description = document.getElementById('product-description').value;
+            const imageFile = document.getElementById('product-image').files[0];
+            const videoFile = document.getElementById('product-video').files[0];
+
+            if (name && price && description) {
+                const product = {
+                    name: name,
+                    price: price,
+                    description: description,
+                    image: imageFile ? URL.createObjectURL(imageFile) : '',
+                    video: videoFile ? URL.createObjectURL(videoFile) : '',
+                    user: currentUser
+                };
+                products.push(product);
+                displayProducts();
+                clearForm();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+
+        function displayProducts(filter = '') {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            const filteredProducts = products.filter(product => product.name.toLowerCase().includes(filter.toLowerCase()));
+
+            filteredProducts.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'product-item';
+                item.innerHTML = `<h2>${product.name}</h2>
+                                  <p>Price: $${product.price}</p>
+                                  <p>Description: ${product.description}</p>
+                                  <p>Posted by: ${product.user}</p>`;
+                if (product.image) {
+                    item.innerHTML += `<img class="product-image" src="${product.image}" alt="Product Image">`;
+                }
+                if (product.video) {
+                    item.innerHTML += `<video width="320" height="240" controls>
+                                        <source src="${product.video}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                      </video>`;
+                }
+                productList.appendChild(item);
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-price').value = '';
+            document.getElementById('product-description').value = '';
+            document.getElementById('product-image').value = '';
+            document.getElementById('product-video').value = '';
+        }
+
+        document.getElementById('filter').addEventListener('input', function() {
+            const filterValue = this.value;
+            displayProducts(filterValue);
+        });
+    </script>
+</body>
+</html>
