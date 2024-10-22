@@ -3,292 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Delivery App</title>
+    <title>Hello Food</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(to bottom right, #ffcc00, #ff3300);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            flex-grow: 1;
-        }
-        .item {
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            width: calc(20% - 10px);
-            margin: 5px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .item img {
-            width: 100%;
-            border-radius: 5px;
-        }
-        .item h3 {
-            font-size: 20px;
-            margin: 10px 0 5px;
-        }
-        .item p {
-            font-size: 16px;
+            padding: 0;
+            background-color: #f4f4f4;
             color: #333;
         }
-        .add-to-cart {
-            background-color: #4CAF50;
+
+        header {
+            background: #ff6347;
+            padding: 20px 0;
+            text-align: center;
             color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
         }
-        .add-to-cart:hover {
-            background-color: #45a049;
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
         }
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            padding: 10px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-            position: relative;
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
         }
-        .nav button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 10px;
-            position: relative;
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
         }
-        .profile {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        .profile img {
-            border-radius: 50%;
-            width: 40px;
-        }
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+
+        nav a {
+            color: white;
+            text-decoration: none;
             font-weight: bold;
         }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+
+        .quote {
+            font-style: italic;
+            margin: 20px 0;
+            font-size: 1.2em;
         }
-        .feedback {
-            margin-top: 20px;
+
+        .food-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
         }
-        .feedback textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 10px;
+
+        .food-item {
+            background: #fff;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            margin: 10px;
+            padding: 20px;
+            cursor: pointer;
+            width: 150px;
+            text-align: center;
+            transition: transform 0.2s;
         }
-        .feedback button {
-            margin-top: 10px;
-            background-color: #4CAF50;
+
+        .food-item:hover {
+            transform: scale(1.05);
+            border-color: #ff6347;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #food-detail, #cart {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        #cart {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+        }
+
+        #cart h3 {
+            margin-top: 0;
+        }
+
+        button {
+            background-color: #ff6347;
             color: white;
             border: none;
-            padding: 10px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
+            transition: background 0.3s;
         }
-        .feedback button:hover {
-            background-color: #45a049;
+
+        button:hover {
+            background-color: #e5534a;
         }
-        @media (max-width: 768px) {
-            .item {
-                width: calc(50% - 10px);
-            }
-        }
-        @media (max-width: 480px) {
-            .item {
-                width: calc(100% - 10px);
-            }
+
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-
-    <div class="profile">
-        <img src="https://via.placeholder.com/40" alt="Profile">
+    <header>
+        <h1>Hello Food</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Menu</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <p class="quote">"Good food is the foundation of genuine happiness."</p>
+    </header>
+    <main>
+        <section class="food-list">
+            <article class="food-item" data-detail="Delicious cheese pizza with fresh toppings. Price: $10">
+                <h2>Pizza</h2>
+            </article>
+            <article class="food-item" data-detail="Juicy beef burger with lettuce and tomato. Price: $8">
+                <h2>Burger</h2>
+            </article>
+            <article class="food-item" data-detail="Spaghetti with homemade marinara sauce. Price: $12">
+                <h2>Pasta</h2>
+            </article>
+            <article class="food-item" data-detail="Crispy fried chicken with herbs. Price: $10">
+                <h2>Chicken</h2>
+            </article>
+            <article class="food-item" data-detail="Fresh garden salad with vinaigrette. Price: $7">
+                <h2>Salad</h2>
+            </article>
+            <article class="food-item" data-detail="Tasty sushi rolls with fresh fish. Price: $15">
+                <h2>Sushi</h2>
+            </article>
+            <article class="food-item" data-detail="Spicy tacos with beef and guacamole. Price: $9">
+                <h2>Tacos</h2>
+            </article>
+            <article class="food-item" data-detail="Creamy mushroom risotto. Price: $14">
+                <h2>Risotto</h2>
+            </article>
+            <article class="food-item" data-detail="Sweet chocolate cake with icing. Price: $6">
+                <h2>Cake</h2>
+            </article>
+            <article class="food-item" data-detail="Refreshing fruit smoothie. Price: $5">
+                <h2>Smoothie</h2>
+            </article>
+        </section>
+        <div id="food-detail" class="hidden">
+            <h2>Details</h2>
+            <p id="detail-text"></p>
+            <input type="number" id="item-quantity" value="1" min="1" />
+            <button id="add-to-cart">Add to Cart</button>
+            <button id="close-detail">Close</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Hello Food</p>
+    </footer>
+    <div id="cart" class="hidden">
+        <h3>Shopping Cart</h3>
+        <ul id="cart-items"></ul>
+        <label for="payment-method">Payment Method:</label>
+        <select id="payment-method">
+            <option value="credit-card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="cash">Cash on Delivery</option>
+        </select>
+        <button id="checkout">Checkout</button>
     </div>
-
-    <div class="container" id="food-items">
-        <div class="item">
-            <img src="https://via.placeholder.com/150" alt="Biryani">
-            <h3>Biryani</h3>
-            <p>$12.99</p>
-            <button class="add-to-cart" onclick="addToCart('Biryani', 12.99)">Add to Cart</button>
-        </div>
-        <div class="item">
-            <img src="https://via.placeholder.com/150" alt="Pasta">
-            <h3>Pasta</h3>
-            <p>$10.99</p>
-            <button class="add-to-cart" onclick="addToCart('Pasta', 10.99)">Add to Cart</button>
-        </div>
-        <div class="item">
-            <img src="https://via.placeholder.com/150" alt="Pizza">
-            <h3>Pizza</h3>
-            <p>$14.99</p>
-            <button class="add-to-cart" onclick="addToCart('Pizza', 14.99)">Add to Cart</button>
-        </div>
-        <div class="item">
-            <img src="https://via.placeholder.com/150" alt="Sushi">
-            <h3>Sushi</h3>
-            <p>$15.99</p>
-            <button class="add-to-cart" onclick="addToCart('Sushi', 15.99)">Add to Cart</button>
-        </div>
-        <div class="item">
-            <img src="https://via.placeholder.com/150" alt="Salad">
-            <h3>Salad</h3>
-            <p>$8.99</p>
-            <button class="add-to-cart" onclick="addToCart('Salad', 8.99)">Add to Cart</button>
-        </div>
-    </div>
-
-    <div class="nav">
-        <button>🏠</button> <!-- Home emoji -->
-        <button>🔍</button> <!-- Search emoji -->
-        <button onclick="openCart()">🛒 (<span id="cart-count">0</span>)</button> <!-- Cart emoji -->
-        <button>⚙️</button> <!-- Settings emoji -->
-        <button onclick="openFeedback()">🔔</button> <!-- Notifications emoji -->
-    </div>
-
-    <!-- Cart Modal -->
-    <div id="cartModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeCart()">&times;</span>
-            <h2>Cart Items</h2>
-            <div id="cart-items"></div>
-            <div id="total-price" style="margin-top: 20px;"></div>
-            <button onclick="confirmOrder()">Confirm Order</button>
-        </div>
-    </div>
-
-    <!-- Feedback Modal -->
-    <div id="feedbackModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeFeedback()">&times;</span>
-            <h2>Feedback</h2>
-            <div class="feedback">
-                <textarea id="feedback-text" placeholder="Leave your feedback here..."></textarea>
-                <button onclick="submitFeedback()">Submit Feedback</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let cartCount = 0;
-        let cartItems = [];
+        let cart = [];
 
-        function addToCart(itemName, itemPrice) {
-            cartCount++;
-            document.getElementById('cart-count').innerText = cartCount;
-            cartItems.push({ name: itemName, price: itemPrice });
-            alert(`${itemName} added to cart!`);
-        }
-
-        function openCart() {
-            document.getElementById('cartModal').style.display = "block";
-            displayCartItems();
-        }
-
-        function closeCart() {
-            document.getElementById('cartModal').style.display = "none";
-        }
-
-        function confirmOrder() {
-            alert("Your order has been confirmed!");
-            closeCart();
-            cartCount = 0;
-            cartItems = [];
-            document.getElementById('cart-count').innerText = cartCount;
-        }
-
-        function displayCartItems() {
-            const cartItemsDiv = document.getElementById('cart-items');
-            cartItemsDiv.innerHTML = '';
-
-            let totalPrice = 0;
-
-            cartItems.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.textContent = `${item.name} - $${item.price.toFixed(2)}`;
-                cartItemsDiv.appendChild(itemDiv);
-                totalPrice += item.price;
+        document.querySelectorAll('.food-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const detailText = item.getAttribute('data-detail');
+                document.getElementById('detail-text').textContent = detailText;
+                document.getElementById('food-detail').classList.remove('hidden');
             });
+        });
 
-            document.getElementById('total-price').textContent = `Total: $${totalPrice.toFixed(2)}`;
+        document.getElementById('close-detail').addEventListener('click', () => {
+            document.getElementById('food-detail').classList.add('hidden');
+        });
+
+        document.getElementById('add-to-cart').addEventListener('click', () => {
+            const quantity = parseInt(document.getElementById('item-quantity').value);
+            const foodDetail = document.getElementById('detail-text').textContent;
+            const foodName = foodDetail.split(' ')[0]; // Extract the food name
+
+            cart.push({ name: foodName, quantity: quantity });
+            updateCart();
+            document.getElementById('food-detail').classList.add('hidden');
+        });
+
+        function updateCart() {
+            const cartList = document.getElementById('cart-items');
+            cartList.innerHTML = ''; // Clear current cart items
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} (x${item.quantity})`;
+                cartList.appendChild(li);
+            });
+            document.getElementById('cart').classList.remove('hidden');
         }
 
-        function openFeedback() {
-            document.getElementById('feedbackModal').style.display = "block";
-        }
-
-        function closeFeedback() {
-            document.getElementById('feedbackModal').style.display = "none";
-        }
-
-        function submitFeedback() {
-            const feedbackText = document.getElementById('feedback-text').value;
-            alert(`Feedback submitted: ${feedbackText}`);
-            document.getElementById('feedback-text').value = '';
-            closeFeedback();
-        }
-
-        window.onclick = function(event) {
-            const cartModal = document.getElementById('cartModal');
-            const feedbackModal = document.getElementById('feedbackModal');
-            if (event.target === cartModal) {
-                closeCart();
-            }
-            if (event.target === feedbackModal) {
-                closeFeedback();
-            }
-        }
+        document.getElementById('checkout').addEventListener('click', () => {
+            const paymentMethod = document.getElementById('payment-method').value;
+            alert(`Checkout with payment method: ${paymentMethod}`);
+            // Here you could implement further checkout logic
+        });
     </script>
-
 </body>
 </html>
