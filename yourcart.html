@@ -3,252 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Cart - Buy & Sell</title>
+    <title>Your Cart</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f5f5f5;
         }
-
         header {
-            background: #007bff;
-            padding: 20px;
+            background-color: #2874f0;
             color: white;
+            padding: 15px;
             text-align: center;
-            position: relative;
+            position: sticky;
+            top: 0;
         }
-
-        h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group, .login-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
+        .logo {
+            font-size: 24px;
             font-weight: bold;
         }
-
-        input[type="text"], input[type="number"], input[type="file"], input[type="submit"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        input[type="submit"] {
-            background: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        input[type="submit"]:hover {
-            background: #218838;
-        }
-
-        .product-list {
-            margin-top: 20px;
-        }
-
-        .product-item {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-        }
-
-        .product-item h2 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-
-        .product-item p {
-            margin: 5px 0;
-        }
-
-        .product-image {
-            max-width: 100%;
-            border-radius: 5px;
-        }
-
-        .login-group, .logout-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .filter-group {
+        .search-bar {
             margin: 20px 0;
         }
-
-        .filter-group input[type="text"] {
-            width: auto;
-            display: inline-block;
+        .search-bar input {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
         }
-
-        .alert {
-            color: red;
-            font-weight: bold;
+        .search-bar button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff9900;
+            color: white;
+            cursor: pointer;
+        }
+        .item-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        .item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        .item:hover {
+            transform: scale(1.05);
+        }
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .form-container {
+            padding: 20px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #2874f0;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Your Cart</h1>
-    </header>
-    <div class="container">
-        <div class="login-group" id="login-section">
-            <div>
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter username">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter password">
-                <input type="submit" id="login-btn" value="Login">
-            </div>
-            <div>
-                <button id="logout-btn" class="hidden">Logout</button>
-            </div>
-        </div>
 
-        <div class="form-group" id="product-form" style="display: none;">
-            <h2>Add Product</h2>
-            <label for="product-name">Product Name</label>
-            <input type="text" id="product-name" placeholder="Enter product name" required>
-
-            <label for="product-price">Price ($)</label>
-            <input type="number" id="product-price" placeholder="Enter product price" required>
-
-            <label for="product-description">Description</label>
-            <input type="text" id="product-description" placeholder="Enter product description" required>
-
-            <label for="product-image">Upload Image</label>
-            <input type="file" id="product-image" accept="image/*">
-
-            <label for="product-video">Upload Video</label>
-            <input type="file" id="product-video" accept="video/*">
-
-            <input type="submit" id="add-product" value="Add Product">
-        </div>
-
-        <div class="filter-group">
-            <label for="filter">Filter Products</label>
-            <input type="text" id="filter" placeholder="Search products...">
-        </div>
-
-        <div class="product-list" id="product-list"></div>
+<header>
+    <div class="logo">Your Cart</div>
+    <div class="search-bar">
+        <input type="text" placeholder="Search for products...">
+        <button onclick="searchItems()">Search</button>
     </div>
+</header>
 
-    <script>
-        const products = [];
-        let currentUser = null;
+<div class="item-list" id="itemList">
+    <div class="item">
+        <img src="https://via.placeholder.com/150/FF5733/FFFFFF?text=Product+1" alt="Product 1">
+        <h2>Product 1</h2>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart('Product 1', 100)">Add to Cart</button>
+    </div>
+    <div class="item">
+        <img src="https://via.placeholder.com/150/33FF57/FFFFFF?text=Product+2" alt="Product 2">
+        <h2>Product 2</h2>
+        <p>Price: ₹200</p>
+        <button onclick="addToCart('Product 2', 200)">Add to Cart</button>
+    </div>
+    <div class="item">
+        <img src="https://via.placeholder.com/150/3357FF/FFFFFF?text=Product+3" alt="Product 3">
+        <h2>Product 3</h2>
+        <p>Price: ₹300</p>
+        <button onclick="addToCart('Product 3', 300)">Add to Cart</button>
+    </div>
+    <div class="item">
+        <img src="https://via.placeholder.com/150/FF33A1/FFFFFF?text=Product+4" alt="Product 4">
+        <h2>Product 4</h2>
+        <p>Price: ₹400</p>
+        <button onclick="addToCart('Product 4', 400)">Add to Cart</button>
+    </div>
+</div>
 
-        document.getElementById('login-btn').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+<div class="form-container hidden" id="loginForm">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="login()">Login</button>
+</div>
 
-            // Simple login simulation (you can enhance this with real authentication)
-            if (username && password) {
-                currentUser = username;
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('product-form').style.display = 'block';
-                document.getElementById('logout-btn').classList.remove('hidden');
-                alert('Logged in as ' + username);
-            } else {
-                alert('Please enter valid credentials');
-            }
+<div class="form-container hidden" id="signupForm">
+    <h2>Signup</h2>
+    <input type="email" id="signupEmail" placeholder="Email" required>
+    <input type="password" id="signupPassword" placeholder="Password" required>
+    <button onclick="signup()">Signup</button>
+</div>
+
+<div class="form-container hidden" id="userProfile">
+    <h2>User Profile</h2>
+    <p id="userEmail"></p>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="footer">
+    &copy; 2024 Your Cart. All rights reserved.
+</div>
+
+<script>
+    let currentUser = null;
+
+    function searchItems() {
+        const input = document.querySelector('.search-bar input').value.toLowerCase();
+        const items = document.querySelectorAll('.item');
+        
+        items.forEach(item => {
+            const title = item.querySelector('h2').textContent.toLowerCase();
+            item.style.display = title.includes(input) ? 'block' : 'none';
         });
+    }
 
-        document.getElementById('logout-btn').addEventListener('click', function() {
-            currentUser = null;
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('product-form').style.display = 'none';
-            document.getElementById('logout-btn').classList.add('hidden');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            alert('Logged out');
-        });
-
-        document.getElementById('add-product').addEventListener('click', function() {
-            const name = document.getElementById('product-name').value;
-            const price = document.getElementById('product-price').value;
-            const description = document.getElementById('product-description').value;
-            const imageFile = document.getElementById('product-image').files[0];
-            const videoFile = document.getElementById('product-video').files[0];
-
-            if (name && price && description) {
-                const product = {
-                    name: name,
-                    price: price,
-                    description: description,
-                    image: imageFile ? URL.createObjectURL(imageFile) : '',
-                    video: videoFile ? URL.createObjectURL(videoFile) : '',
-                    user: currentUser
-                };
-                products.push(product);
-                displayProducts();
-                clearForm();
-            } else {
-                alert('Please fill in all fields.');
-            }
-        });
-
-        function displayProducts(filter = '') {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = '';
-            const filteredProducts = products.filter(product => product.name.toLowerCase().includes(filter.toLowerCase()));
-
-            filteredProducts.forEach(product => {
-                const item = document.createElement('div');
-                item.className = 'product-item';
-                item.innerHTML = `<h2>${product.name}</h2>
-                                  <p>Price: $${product.price}</p>
-                                  <p>Description: ${product.description}</p>
-                                  <p>Posted by: ${product.user}</p>`;
-                if (product.image) {
-                    item.innerHTML += `<img class="product-image" src="${product.image}" alt="Product Image">`;
-                }
-                if (product.video) {
-                    item.innerHTML += `<video width="320" height="240" controls>
-                                        <source src="${product.video}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                      </video>`;
-                }
-                productList.appendChild(item);
-            });
+    function addToCart(itemName, price) {
+        if (!currentUser) {
+            alert("Please login to add items to your cart.");
+            return;
         }
+        alert(`${itemName} added to your cart for ₹${price}`);
+    }
 
-        function clearForm() {
-            document.getElementById('product-name').value = '';
-            document.getElementById('product-price').value = '';
-            document.getElementById('product-description').value = '';
-            document.getElementById('product-image').value = '';
-            document.getElementById('product-video').value = '';
+    function login() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        // Simulating login
+        if (email && password) {
+            currentUser = { email: email };
+            document.getElementById('userEmail').textContent = `Logged in as: ${email}`;
+            toggleForms('profile');
+        } else {
+            alert("Please fill in all fields.");
         }
+    }
 
-        document.getElementById('filter').addEventListener('input', function() {
-            const filterValue = this.value;
-            displayProducts(filterValue);
-        });
-    </script>
+    function signup() {
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+
+        // Simulating signup
+        if (email && password) {
+            alert("Signup successful!");
+            toggleForms('login');
+        } else {
+            alert("Please fill in all fields.");
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        alert("Logged out successfully.");
+        toggleForms('login');
+    }
+
+    function toggleForms(form) {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('signupForm').classList.add('hidden');
+        document.getElementById('userProfile').classList.add('hidden');
+
+        if (form === 'login') {
+            document.getElementById('loginForm').classList.remove('hidden');
+        } else if (form === 'signup') {
+            document.getElementById('signupForm').classList.remove('hidden');
+        } else if (form === 'profile') {
+            document.getElementById('userProfile').classList.remove('hidden');
+        }
+    }
+
+    // Show login form by default
+    toggleForms('login');
+</script>
+
 </body>
 </html>
