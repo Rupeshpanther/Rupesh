@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Food Delivery 24/7</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Light gray background */
+            color: #333; /* Dark text color */
+        }
+        h1 {
+            text-align: center;
+            color: #e74c3c; /* Bright red */
+            font-size: 3em;
+            margin: 40px 0;
+        }
+        p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        #restaurant-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+        .restaurant {
+            background-color: #fff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .restaurant:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+        }
+        .restaurant img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .restaurant div {
+            padding: 15px;
+        }
+        .restaurant h2 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        .restaurant p {
+            color: #7f8c8d;
+            font-size: 1em;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+        #modal, #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            padding-top: 60px;
+            text-align: center;
+        }
+        #modal-content, #image-modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #large-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .order-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .box, .payment-box {
+            background-color: #fff;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #food-items ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #food-items li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #food-items button {
+            background-color: #2ecc71;
+            color: white;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+        }
+        #total-cost, #confirmation-message {
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495e;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .title{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: large;
+            background-color: #3498db;
+            font-size: 30px;
+            color:yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1 class ="title">Hello Food Delivery  </h1>
+    <p>Discover delicious restaurants nearby</p>
+
+    <!-- Restaurant List Section -->
+    <div id="restaurant-list">
+        <div class="restaurant">
+            <img src="\images\pizza.jpg" alt="Pizza Place" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Pizza Palace</h2>
+                <p>Location: 123 Pizza St, Food City</p>
+                <p>Rating: ★★★★☆ (4.5)</p>
+                <button onclick="openModal('Pizza Palace')">Order Food</button>
+            </div>
+        </div>
+
+        <div class="restaurant">
+            <img src="\images\icecream.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Icecream</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+
+        <div class="restaurant">
+            <img src="\images\fries.jpg" alt="Burger Joint" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Fries</h2>
+                <p>Location: 789 Burger Blvd, Food City</p>
+                <p>Rating: ★★★☆☆ (3.8)</p>
+                <button onclick="openModal('Burger Shack')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\salad.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Salad Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\sandwich.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Sandwich Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\tacos.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Tacos Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\steak.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Steak Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\pasta.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Pasta Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\burger.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Burger Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+        <div class="restaurant">
+            <img src="\images\sushi.jpg" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Sushi Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for login and food selection -->
+    <div id="modal">
+        <div id="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Login</h2>
+            <label for="username">Username:</label>
+            <input type="text" id="username" required><br>
+            <label for="location">My Location:</label>
+            <input type="text" id="location" required placeholder="Enter your location"><br>
+            <div id="food-items"></div>
+            <div id="total-cost">Total Cost: $0.00</div>
+            <div>
+                <button id="cancelOrder" onclick="cancelOrder()">Cancel Order</button>
+                <button id="saveOrder" onclick="saveOrder()">Save Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing restaurant image -->
+    <div id="image-modal">
+        <div id="image-modal-content">
+            <span class="close" onclick="closeImageModal()">&times;</span>
+            <img id="large-image" src="" alt="Restaurant Image">
+        </div>
+    </div>
+
+    <!-- Order section -->
+    <div class="order-section">
+        <div class="box">
+            <h3>Your Orders</h3>
+            <button onclick="viewOrders()">View Orders</button>
+            <div id="order-summary"></div>
+        </div>
+        <div class="payment-box">
+            <h3>Payment Method</h3>
+            <label><input type="radio" name="payment" value="cash" checked> Cash on Delivery</label><br>
+            <label><input type="radio" name="payment" value="online"> Online Payment</label>
+        </div>
+    </div>
+<footer>
+    <div class="footer">
+        <p>&copy; 2024 Hello Food Delivery. All rights reserved.</p>
+    </div>
+    </footer>
+
+    <script>
+        // Modal handling functions
+        function openModal(restaurantName) {
+            // Logic for opening the modal and displaying restaurant food options
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("food-items").innerHTML = `
+                <ul>
+                    <li>Pizza - $10 <button onclick="addToOrder('Pizza', 10)">Add</button></li>
+                    <li>Sushi - $12 <button onclick="addToOrder('Sushi', 12)">Add</button></li>
+                    <li>Burger - $8 <button onclick="addToOrder('Burger', 8)">Add</button></li>
+                    <li>Tacos - $20 <button onclick="addToOrder('Tacos', 20)">Add</button></li>
+                </ul>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function openImageModal(src) {
+            document.getElementById("large-image").src = src;
+            document.getElementById("image-modal").style.display = "block";
+        }
+
+        function closeImageModal() {
+            document.getElementById("image-modal").style.display = "none";
+        }
+
+        function addToOrder(item, price) {
+            alert(`${item} added to order. Price: $${price}`);
+        }
+
+        function cancelOrder() {
+            alert("Order has been canceled.");
+            closeModal();
+        }
+
+        function saveOrder() {
+            alert("Order has been saved.");
+            closeModal();
+        }
+
+        function viewOrders() {
+            alert("Viewing your orders.");
+        }
+    </script>
+</body>
+</html>
