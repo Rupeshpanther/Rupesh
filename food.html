@@ -3,227 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Food</title>
+    <title>Hello Food Delivery 24/7</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: #f0f0f0; /* Light gray background */
+            color: #333; /* Dark text color */
         }
-
-        header {
-            background: #ff6347;
-            padding: 20px 0;
-            text-align: center;
-            color: white;
-        }
-
         h1 {
-            margin: 0;
-            font-size: 2.5em;
+            text-align: center;
+            color: #e74c3c; /* Bright red */
+            font-size: 3em;
+            margin: 40px 0;
         }
-
-        nav ul {
+        p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        #restaurant-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+        .restaurant {
+            background-color: #fff; /* White background */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .restaurant:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+        }
+        .restaurant img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .restaurant div {
+            padding: 15px;
+        }
+        .restaurant h2 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        .restaurant p {
+            color: #7f8c8d;
+            font-size: 1em;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+        #modal, #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            padding-top: 60px;
+            text-align: center;
+        }
+        #modal-content, #image-modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        #large-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .order-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .box, .payment-box {
+            background-color: #fff;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        #food-items ul {
             list-style-type: none;
             padding: 0;
         }
-
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .quote {
-            font-style: italic;
-            margin: 20px 0;
-            font-size: 1.2em;
-        }
-
-        .food-list {
+        #food-items li {
+            margin: 10px 0;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .food-item {
-            background: #fff;
-            border: 1px solid #ddd;
+        #food-items button {
+            background-color: #2ecc71;
+            color: white;
+            padding: 5px 15px;
+            border: none;
             border-radius: 5px;
-            margin: 10px;
-            padding: 20px;
-            cursor: pointer;
-            width: 150px;
-            text-align: center;
-            transition: transform 0.2s;
         }
-
-        .food-item:hover {
-            transform: scale(1.05);
-            border-color: #ff6347;
-        }
-
-        .hidden {
+        #total-cost, #confirmation-message {
+            margin-top: 15px;
+            font-weight: bold;
             display: none;
         }
-
-        #food-detail, #cart {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin: 20px;
+        .footer {
             text-align: center;
-            border-radius: 5px;
-        }
-
-        #cart {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-        }
-
-        #cart h3 {
-            margin-top: 0;
-        }
-
-        button {
-            background-color: #ff6347;
+            padding: 20px;
+            background-color: #34495e;
             color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #e5534a;
-        }
-
-        select {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Hello Food</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-        </nav>
-        <p class="quote">"Good food is the foundation of genuine happiness."</p>
-    </header>
-    <main>
-        <section class="food-list">
-            <article class="food-item" data-detail="Delicious cheese pizza with fresh toppings. Price: $10">
-                <h2>Pizza</h2>
-            </article>
-            <article class="food-item" data-detail="Juicy beef burger with lettuce and tomato. Price: $8">
-                <h2>Burger</h2>
-            </article>
-            <article class="food-item" data-detail="Spaghetti with homemade marinara sauce. Price: $12">
-                <h2>Pasta</h2>
-            </article>
-            <article class="food-item" data-detail="Crispy fried chicken with herbs. Price: $10">
-                <h2>Chicken</h2>
-            </article>
-            <article class="food-item" data-detail="Fresh garden salad with vinaigrette. Price: $7">
-                <h2>Salad</h2>
-            </article>
-            <article class="food-item" data-detail="Tasty sushi rolls with fresh fish. Price: $15">
-                <h2>Sushi</h2>
-            </article>
-            <article class="food-item" data-detail="Spicy tacos with beef and guacamole. Price: $9">
-                <h2>Tacos</h2>
-            </article>
-            <article class="food-item" data-detail="Creamy mushroom risotto. Price: $14">
-                <h2>Risotto</h2>
-            </article>
-            <article class="food-item" data-detail="Sweet chocolate cake with icing. Price: $6">
-                <h2>Cake</h2>
-            </article>
-            <article class="food-item" data-detail="Refreshing fruit smoothie. Price: $5">
-                <h2>Smoothie</h2>
-            </article>
-        </section>
-        <div id="food-detail" class="hidden">
-            <h2>Details</h2>
-            <p id="detail-text"></p>
-            <input type="number" id="item-quantity" value="1" min="1" />
-            <button id="add-to-cart">Add to Cart</button>
-            <button id="close-detail">Close</button>
+    <h1>Hello Food Delivery 24/7</h1>
+    <p>Discover delicious restaurants nearby</p>
+
+    <!-- Restaurant List Section -->
+    <div id="restaurant-list">
+        <div class="restaurant">
+            <img src="https://images.unsplash.com/photo-1512054891667-2047da3ff31d?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjA1NTd8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&w=400" alt="Pizza Place" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Pizza Palace</h2>
+                <p>Location: 123 Pizza St, Food City</p>
+                <p>Rating: ★★★★☆ (4.5)</p>
+                <button onclick="openModal('Pizza Palace')">Order Food</button>
+            </div>
         </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Hello Food</p>
-    </footer>
-    <div id="cart" class="hidden">
-        <h3>Shopping Cart</h3>
-        <ul id="cart-items"></ul>
-        <label for="payment-method">Payment Method:</label>
-        <select id="payment-method">
-            <option value="credit-card">Credit Card</option>
-            <option value="paypal">PayPal</option>
-            <option value="cash">Cash on Delivery</option>
-        </select>
-        <button id="checkout">Checkout</button>
+
+        <div class="restaurant">
+            <img src="https://images.unsplash.com/photo-1613473883044-f3296b760cb5?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjA1NTd8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&w=400" alt="Sushi Spot" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Sushi Spot</h2>
+                <p>Location: 456 Sushi Ave, Food City</p>
+                <p>Rating: ★★★★★ (5.0)</p>
+                <button onclick="openModal('Sushi Spot')">Order Food</button>
+            </div>
+        </div>
+
+        <div class="restaurant">
+            <img src="https://images.unsplash.com/photo-1561345194-e72947f3aeb7?crop=entropy&cs=tinysrgb&fit=max&ixid=MnwzNjA1NTd8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&w=400" alt="Burger Joint" onclick="openImageModal(this.src)">
+            <div>
+                <h2>Burger Shack</h2>
+                <p>Location: 789 Burger Blvd, Food City</p>
+                <p>Rating: ★★★☆☆ (3.8)</p>
+                <button onclick="openModal('Burger Shack')">Order Food</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Modal for login and food selection -->
+    <div id="modal">
+        <div id="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Login</h2>
+            <label for="username">Username:</label>
+            <input type="text" id="username" required><br>
+            <label for="location">My Location:</label>
+            <input type="text" id="location" required placeholder="Enter your location"><br>
+            <div id="food-items"></div>
+            <div id="total-cost">Total Cost: $0.00</div>
+            <div>
+                <button id="cancelOrder" onclick="cancelOrder()">Cancel Order</button>
+                <button id="saveOrder" onclick="saveOrder()">Save Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing restaurant image -->
+    <div id="image-modal">
+        <div id="image-modal-content">
+            <span class="close" onclick="closeImageModal()">&times;</span>
+            <img id="large-image" src="" alt="Restaurant Image">
+        </div>
+    </div>
+
+    <!-- Order section -->
+    <div class="order-section">
+        <div class="box">
+            <h3>Your Orders</h3>
+            <button onclick="viewOrders()">View Orders</button>
+            <div id="order-summary"></div>
+        </div>
+        <div class="payment-box">
+            <h3>Payment Method</h3>
+            <label><input type="radio" name="payment" value="cash" checked> Cash on Delivery</label><br>
+            <label><input type="radio" name="payment" value="online"> Online Payment</label>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Hello Food Delivery. All rights reserved.</p>
+    </div>
+
     <script>
-        let cart = [];
-
-        document.querySelectorAll('.food-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const detailText = item.getAttribute('data-detail');
-                document.getElementById('detail-text').textContent = detailText;
-                document.getElementById('food-detail').classList.remove('hidden');
-            });
-        });
-
-        document.getElementById('close-detail').addEventListener('click', () => {
-            document.getElementById('food-detail').classList.add('hidden');
-        });
-
-        document.getElementById('add-to-cart').addEventListener('click', () => {
-            const quantity = parseInt(document.getElementById('item-quantity').value);
-            const foodDetail = document.getElementById('detail-text').textContent;
-            const foodName = foodDetail.split(' ')[0]; // Extract the food name
-
-            cart.push({ name: foodName, quantity: quantity });
-            updateCart();
-            document.getElementById('food-detail').classList.add('hidden');
-        });
-
-        function updateCart() {
-            const cartList = document.getElementById('cart-items');
-            cartList.innerHTML = ''; // Clear current cart items
-            cart.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = `${item.name} (x${item.quantity})`;
-                cartList.appendChild(li);
-            });
-            document.getElementById('cart').classList.remove('hidden');
+        // Modal handling functions
+        function openModal(restaurantName) {
+            // Logic for opening the modal and displaying restaurant food options
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("food-items").innerHTML = `
+                <ul>
+                    <li>Pizza - $10 <button onclick="addToOrder('Pizza', 10)">Add</button></li>
+                    <li>Sushi - $12 <button onclick="addToOrder('Sushi', 12)">Add</button></li>
+                    <li>Burger - $8 <button onclick="addToOrder('Burger', 8)">Add</button></li>
+                </ul>
+            `;
         }
 
-        document.getElementById('checkout').addEventListener('click', () => {
-            const paymentMethod = document.getElementById('payment-method').value;
-            alert(`Checkout with payment method: ${paymentMethod}`);
-            // Here you could implement further checkout logic
-        });
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function openImageModal(src) {
+            document.getElementById("large-image").src = src;
+            document.getElementById("image-modal").style.display = "block";
+        }
+
+        function closeImageModal() {
+            document.getElementById("image-modal").style.display = "none";
+        }
+
+        function addToOrder(item, price) {
+            alert(`${item} added to order. Price: $${price}`);
+        }
+
+        function cancelOrder() {
+            alert("Order has been canceled.");
+            closeModal();
+        }
+
+        function saveOrder() {
+            alert("Order has been saved.");
+            closeModal();
+        }
+
+        function viewOrders() {
+            alert("Viewing your orders.");
+        }
     </script>
 </body>
 </html>
