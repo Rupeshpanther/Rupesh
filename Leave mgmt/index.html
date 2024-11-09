@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Leave Management System</h1>
+
+        <!-- Employee Dashboard -->
+        <div class="dashboard">
+            <h2>Employee Dashboard</h2>
+            <div class="leave-balance">
+                <h3>Your Leave Balances:</h3>
+                <p>Casual Leave: <span id="casualLeaveBalance">10</span> days</p>
+                <p>Sick Leave: <span id="sickLeaveBalance">5</span> days</p>
+            </div>
+
+            <!-- Leave Application Form -->
+            <div class="leave-application">
+                <h3>Apply for Leave</h3>
+                <form id="leaveForm">
+                    <label for="leaveType">Leave Type:</label>
+                    <select id="leaveType" required>
+                        <option value="casual">Casual Leave</option>
+                        <option value="sick">Sick Leave</option>
+                    </select>
+                    <br>
+
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" id="startDate" required>
+                    <br>
+
+                    <label for="endDate">End Date:</label>
+                    <input type="date" id="endDate" required>
+                    <br>
+
+                    <button type="submit">Submit Leave Request</button>
+                </form>
+                <p id="statusMessage"></p>
+            </div>
+
+            <!-- Leave History -->
+            <div class="leave-history">
+                <h3>Leave History</h3>
+                <ul id="leaveHistory">
+                    <!-- Leave history will be displayed here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
